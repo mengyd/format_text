@@ -6,7 +6,7 @@ __author__ = "MENG Yidong"
 __version__ = "1.0"
 
 __min_words__ = 4
-__max_caracters__ = 110
+__max_caracters__ = 100
 
 def format_text_file(filename: str = None):
     """
@@ -43,25 +43,21 @@ def format_text_file(filename: str = None):
             if newstring in appearedlines:
                 # delete if the formatted line appealed already
                 pass
+            elif len(newstring) > __max_caracters__:
+                # delete if too long
+                print("deleted long")
+                pass
+            elif re.search(r'\d', newstring) is not None:
+                # delete if have numbers
+                print("deleted num")
+                pass
             else:
                 # add into appeared list
                 appearedlines.append(newstring)
                 # write into new file
                 f2.write(newstring + "\n")
                 linecounter += 1
-
-                # check length
-                if len(newstring) > __max_caracters__:
-                    print("*" * 30)
-                    print("\tLine '", linecounter, "' is longer than", __max_caracters__, "caracters:")
-                    print("\t", newstring)
-
-                # check number
-                if re.search(r'\d', newstring) is not None:
-                    print("*" * 30)
-                    print("\tLine '", linecounter, "' has number:")
-                    print("\t", newstring)
-
+                
     # close the files
     f1.close()
     f2.close()
