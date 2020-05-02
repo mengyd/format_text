@@ -16,6 +16,13 @@
 
 ### Use guide
 Put the ``format_text.py`` file into the folder with .txt files to format, then just **run** the script.
+#### Options
+Change the minimum words and maximum caracters in a line as we want : 
+* Minimum words : 
+  * Change the value here at the top of the "format_text.py" file : ``__min_words__ = 4``
+* Maximum caracters :
+  * Change the value here just below the minimum words : 
+  ``__max_caracters__ = 110``
 
 ___________
 
@@ -33,6 +40,16 @@ ___________
 * 删除**带数字**的句子
 * 显示**合格**行数
 
-
 ### 用法
 把 ``format_text.py`` 文件放入含有待审核的txt文档的文件夹内, 然后**运行**该脚本就行了。
+
+#### 可选
+可根据需要改变要求的最小单词数和最大字符数 : 
+* 调整**最小单词数** : 
+  * 在 "format_text.py" 文件顶部改变这里的数值 : <br>
+  ``__min_words__ = 4``
+
+
+* 调整**最大字符数** :
+  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最小单词数下面）: <br>
+  ``__max_caracters__ = 110``

@@ -8,7 +8,7 @@ __version__ = "1.0"
 # minimum words 最少词数
 __min_words__ = 4
 # maximum caracters 最大字符数
-__max_caracters__ = 100
+__max_caracters__ = 110
 
 def format_text_file(filename: str = None):
     """
