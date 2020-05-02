@@ -5,13 +5,14 @@ __software__ = "strip_text"
 __author__ = "MENG Yidong"
 __version__ = "1.0"
 
+__min_words__ = 4
 __max_caracters__ = 110
 
 def format_text_file(filename: str = None):
     """
     Delete the top, bottom spaces and blank lines
     """
-    
+
     linecounter = 0
     newstring = ""
     appearedlines = []
@@ -24,7 +25,7 @@ def format_text_file(filename: str = None):
         if s == "\n":
             # delete blank line
             pass
-        elif len(s.split(' ')) < 4:
+        elif len(s.split(' ')) < __min_words__:
             # delete line which is too short
             pass
         elif ":" in s:
