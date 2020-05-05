@@ -45,6 +45,11 @@ def format_text_by_file(filename: str = None):
         else:
             # strip and capitalize the line
             newstring = s.strip().capitalize()
+
+            # delete first letter if it's not alphabetic
+            if not newstring[0].isalpha:
+                newstring = newstring[1:]
+
             if newstring.endswith('.') or newstring.endswith('!') or newstring.endswith('?'):
                 pass
             else:
@@ -56,11 +61,13 @@ def format_text_by_file(filename: str = None):
                 pass
             elif len(newstring) > __max_caracters__:
                 # delete if too long
-                print("deleted long")
+                # print("deleted long")
+                print("删除长句")
                 pass
             elif re.search(r'\d', newstring) is not None:
                 # delete if have numbers
-                print("deleted num")
+                # print("deleted num")
+                print("删除数字句")
                 pass
             else:
                 # add into appeared list
@@ -92,7 +99,6 @@ def extract_text_in_file(filename: str = None, appeared_lines : [] = None):
     for s in f.readlines():
         if s in appeared_lines:
             # delete(ignore) if the line appealed already
-            print(s, "exited already, deleted")
             pass
         else:
             lines_in_file.append(s)
@@ -101,7 +107,8 @@ def extract_text_in_file(filename: str = None, appeared_lines : [] = None):
     f.close()
     # rename file to .bak
     os.replace(filename, filename+".bak")
-    print("extracted", len(lines_in_file), "lines in", filename)
+    # print("extracted", len(lines_in_file), "lines in", filename)
+    print("从", filename, "中读取", len(lines_in_file), "行。")
     return lines_in_file
 
 def write_text_into_file(filename: str = None, lines: [] = None):
@@ -114,18 +121,21 @@ def write_text_into_file(filename: str = None, lines: [] = None):
     if len(lines) > 1000:
         # write 1000 lines into the file
         f.writelines(lines[:1000])
-        print("writing in", filename, ", 1000 lines.")
+        # print("writing in", filename, ", 1000 lines.")
+        print("写入", filename, ", 1000 行。")
         # delete these 1000 lines from the list
         del(lines[:1000])
     # if we don't have 1000 texts
     elif len(lines) > 0:
         # write all the rest into the file
         f.writelines(lines)
-        print("writing in", filename, ",", len(lines), "lines")
+        # print("writing in", filename, ",", len(lines), "lines")
+        print("写入", filename, ",", len(lines), "行")
         # empty the list
         lines.clear()
     else:
-        print("writing in", filename, ", 0 lines")
+        # print("writing in", filename, ", 0 lines")
+        print("写入", filename, ", 0 行")
     # close file
     f.close()
 
@@ -160,14 +170,20 @@ while True:
     print('>' * 40)
 
     # ask for module to use
-    module_choice = input("Please choose a operation( " + \
-                        __format_choice__ + " for formating, " + \
-                        __blend_choice__ + " for blending, " + \
-                        __delete_bak_choice__ + " for delete backup files, " + \
-                        __quit_choice__ + " for quiting. ) : ")
+    # module_choice = input("Please choose a operation( " + \
+    #                     __format_choice__ + " for formating, " + \
+    #                     __blend_choice__ + " for blending, " + \
+    #                     __delete_bak_choice__ + " for delete backup files, " + \
+    #                     __quit_choice__ + " for quiting. ) : ")
+    module_choice = input("请输入一个执行选项代码( " + \
+                        __format_choice__ + " 为标准化文档, " + \
+                        __blend_choice__ + " 为打乱文档内容, " + \
+                        __delete_bak_choice__ + " 为删除备份文件, " + \
+                        __quit_choice__ + " 为退出程序。 ) : ")
     
     if module_choice == __quit_choice__:
-        print("quit...")
+        # print("quit...")
+        print("退出程序...")
         break
 
     # parse the working directory
@@ -178,20 +194,24 @@ while True:
                 if txtfile.name.endswith(".txt"):
                     linenumber = format_text_by_file(filename=txtfile.name)
                     repalce_file(filename=txtfile.name)
-                    print(txtfile.name, "treated; ", linenumber, "lines")
+                    # print(txtfile.name, "treated; ", linenumber, "lines")
+                    print(txtfile.name, "已处理; ", linenumber, "行")
                     print("-" * 40)
-            print("formating done!")
+            # print("formating done!")
+            print("标准化 完成!")
         elif module_choice == __blend_choice__: # blend texts
             lines_in_folder = []
             filenames_in_folder = []
             for txtfile in filelist:
                 # extract from all the txt files
                 if txtfile.name.endswith(".txt"):
-                    print("reading", txtfile.name)
+                    # print("reading", txtfile.name)
+                    print("正在读取", txtfile.name)
                     lines_in_folder.extend(extract_text_in_file(\
                         filename=txtfile.name, appeared_lines=lines_in_folder))
                     filenames_in_folder.append(txtfile.name)
-            print("extracted", len(lines_in_folder), "lines")
+            # print("extracted", len(lines_in_folder), "lines")
+            print("共读取", len(lines_in_folder), "行")
             # disorganize randomly the lines
             random.shuffle(lines_in_folder)
             # parse the folder
@@ -201,13 +221,15 @@ while True:
             if len(lines_in_folder) > 0:
                 # write them all into rest.txt
                 write_all_in_one_file(lines=lines_in_folder)
-            print("blending done!")
+            # print("blending done!")
+            print("打乱 完成!")
         # TODO: delete .bak files
         elif module_choice == __delete_bak_choice__: # delete backup files
             for backupfile in filelist:
                 if backupfile.name.endswith(".bak"):
                     os.remove(backupfile.name)
-            print("deleting done!")
+            # print("deleting done!")
+            print("删除 完成!")
             
         print("-" * 40)
 
