@@ -35,6 +35,9 @@ Change the minimum words and maximum caracters in a line as we want :
 * Maximum caracters :
   * Change the value here just below the minimum words : 
   ``__max_caracters__ = 110``
+* Maximum lines :
+  * Change the value here just below the Maximum caracters : 
+  ``__max_lines__ = 1000``
 
 ___________
 
@@ -76,3 +79,8 @@ ___________
 * 调整**最大字符数** :
   * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最小单词数下面）: <br>
   ``__max_caracters__ = 110``
+
+
+* 调整**最大句子数** :
+  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最大字符数下面）: <br>
+  ``__max_lines__ = 1000``
