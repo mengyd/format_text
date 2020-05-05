@@ -10,6 +10,8 @@ __version__ = "2.0"
 __min_words__ = 4
 # maximum caracters 最大字符数
 __max_caracters__ = 110
+# maximum lines 最大句子数
+__max_lines__ = 1000
 # choice for quiting
 __quit_choice__ = "0"
 # choice for formating
@@ -118,13 +120,13 @@ def write_text_into_file(filename: str = None, lines: [] = None):
     # Create and open a file for writing
     f = open(filename, 'w', encoding='UTF-8')
     # if we have enough texts
-    if len(lines) > 1000:
+    if len(lines) > __max_lines__:
         # write 1000 lines into the file
-        f.writelines(lines[:1000])
-        # print("writing in", filename, ", 1000 lines.")
-        print("写入", filename, ", 1000 行。")
+        f.writelines(lines[:__max_lines__])
+        # print("writing in", filename, ",", __max_lines__, "lines.")
+        print("写入", filename, ",", __max_lines__, "行。")
         # delete these 1000 lines from the list
-        del(lines[:1000])
+        del(lines[:__max_lines__])
     # if we don't have 1000 texts
     elif len(lines) > 0:
         # write all the rest into the file
