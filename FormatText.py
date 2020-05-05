@@ -2,7 +2,7 @@ import os
 import re
 import random
 
-__software__ = "strip_text"
+__software__ = "FormatText"
 __author__ = "MENG Yidong"
 __version__ = "2.0"
 
@@ -16,6 +16,8 @@ __quit_choice__ = "0"
 __format_choice__ = "1"
 # choice for blending
 __blend_choice__ = "2"
+# choice for delete backup file
+__delete_bak_choice__ = "3"
 
 def format_text_by_file(filename: str = None):
     """
@@ -79,14 +81,22 @@ def repalce_file(filename: str = None):
     os.remove(filename)
     os.replace(filename+".bak", filename)
 
-def extract_text_in_file(filename: str = None):
+def extract_text_in_file(filename: str = None, appeared_lines : [] = None):
     """
     read and return contents of a file
     """
+    lines_in_file = []
     # open file
     f = open(filename, 'r', encoding='UTF-8')
-    # read file
-    lines_in_file = f.readlines()
+    # read file line by line
+    for s in f.readlines():
+        if s in appeared_lines:
+            # delete(ignore) if the line appealed already
+            print(s, "exited already, deleted")
+            pass
+        else:
+            lines_in_file.append(s)
+
     # close the files
     f.close()
     # rename file to .bak
@@ -114,9 +124,10 @@ def write_text_into_file(filename: str = None, lines: [] = None):
         print("writing in", filename, ",", len(lines), "lines")
         # empty the list
         lines.clear()
+    else:
+        print("writing in", filename, ", 0 lines")
     # close file
     f.close()
-    # TODO: delete .bak files
 
     return lines
 
@@ -130,6 +141,7 @@ def write_all_in_one_file(lines: [] = None):
     print(len(lines), "lines left, writing into rest.txt")
     print("+" * 30, "\n")
     frest.close()
+    
 
 ''' ----------------------------Main----------------------------- '''
 # Informations
@@ -151,6 +163,7 @@ while True:
     module_choice = input("Please choose a operation( " + \
                         __format_choice__ + " for formating, " + \
                         __blend_choice__ + " for blending, " + \
+                        __delete_bak_choice__ + " for delete backup files, " + \
                         __quit_choice__ + " for quiting. ) : ")
     
     if module_choice == __quit_choice__:
@@ -167,14 +180,16 @@ while True:
                     repalce_file(filename=txtfile.name)
                     print(txtfile.name, "treated; ", linenumber, "lines")
                     print("-" * 40)
+            print("formating done!")
         elif module_choice == __blend_choice__: # blend texts
             lines_in_folder = []
             filenames_in_folder = []
             for txtfile in filelist:
-                # do the extraction for all the txt files
+                # extract from all the txt files
                 if txtfile.name.endswith(".txt"):
                     print("reading", txtfile.name)
-                    lines_in_folder.extend(extract_text_in_file(filename=txtfile.name))
+                    lines_in_folder.extend(extract_text_in_file(\
+                        filename=txtfile.name, appeared_lines=lines_in_folder))
                     filenames_in_folder.append(txtfile.name)
             print("extracted", len(lines_in_folder), "lines")
             # disorganize randomly the lines
@@ -186,6 +201,13 @@ while True:
             if len(lines_in_folder) > 0:
                 # write them all into rest.txt
                 write_all_in_one_file(lines=lines_in_folder)
+            print("blending done!")
+        # TODO: delete .bak files
+        elif module_choice == __delete_bak_choice__: # delete backup files
+            for backupfile in filelist:
+                if backupfile.name.endswith(".bak"):
+                    os.remove(backupfile.name)
+            print("deleting done!")
             
         print("-" * 40)
 

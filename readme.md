@@ -14,6 +14,7 @@
 * Delete the lines that have **numbers**
 * Display the number of **valid** lines of each file
 * Disorganize **randomly** all the texts in the .txt files in a folder
+* Delete **repeated** texts on the scale of **folder**
 
 ### Use guide
 Put the ``format_text.py`` file into the folder with .txt files to format, then just **run** the script.
@@ -48,6 +49,7 @@ ___________
 * 删除**带数字**的句子
 * 显示**合格**行数
 * **随机**打乱一个文件夹中所有txt文件中的句子，并将打乱后的句子重新分配至不同文件中
+* 在**文件夹**尺度上删除**重复**句子
 
 ### 用法
 把 ``format_text.py`` 文件放入含有待审核的txt文档的文件夹内, 然后**运行**该脚本就行了。
