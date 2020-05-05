@@ -37,45 +37,57 @@ def format_text_by_file(filename: str = None):
     for s in f1.readlines():
         if s == "\n":
             # delete blank line
-            pass
-        elif len(s.split(' ')) < __min_words__:
-            # delete line which is too short
+            # print("删除空行")
+            # print(s)
+            # print("-" * 20)
             pass
         elif ":" in s:
             # delete line with ':'
+            # print("删除冒号")
+            # print(s)
+            # print("-" * 20)
             pass
         else:
             # strip and capitalize the line
-            newstring = s.strip().capitalize()
+            s = s.strip().capitalize()
 
             # delete first letter if it's not alphabetic
-            if not newstring[0].isalpha:
-                newstring = newstring[1:]
+            if not s[0].isalpha:
+                s = s[1:].strip().capitalize()
 
-            if newstring.endswith('.') or newstring.endswith('!') or newstring.endswith('?'):
+            if s.endswith('.') or s.endswith('!') or s.endswith('?'):
                 pass
             else:
                 # replace ',' by '.' at the end of the line
-                newstring = newstring.rstrip(',') + '.'
+                s = s.rstrip(',') + '.'
 
-            if newstring in appearedlines:
+            if s in appearedlines:
                 # delete if the formatted line appealed already
+                # print("删除重复")
+                # print(s)
+                # print("-" * 20)
                 pass
-            elif len(newstring) > __max_caracters__:
+            elif len(s) > __max_caracters__:
                 # delete if too long
                 # print("deleted long")
-                print("删除长句")
+                # print("删除长句")
+                pass 
+            elif len(s.split(' ')) < __min_words__:
+                # delete line which is too short
+                # print("删除过短")
+                # print(s)
+                # print("-" * 20)
                 pass
-            elif re.search(r'\d', newstring) is not None:
+            elif re.search(r'\d', s) is not None:
                 # delete if have numbers
                 # print("deleted num")
-                print("删除数字句")
+                # print("删除数字句")
                 pass
             else:
                 # add into appeared list
-                appearedlines.append(newstring)
+                appearedlines.append(s)
                 # write into new file
-                f2.write(newstring + "\n")
+                f2.write(s + "\n")
                 linecounter += 1
                 
     # close the files
