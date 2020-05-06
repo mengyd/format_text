@@ -27,7 +27,6 @@ def format_text_by_file(filename: str = None):
     """
 
     linecounter = 0 
-    newstring = ""
     appearedlines = []
     # open original file
     f1 = open(filename, 'r', encoding='UTF-8')
@@ -50,6 +49,10 @@ def format_text_by_file(filename: str = None):
         else:
             # strip and capitalize the line
             s = s.strip().capitalize()
+
+            # delete mutiple spaces
+            while "  " in s:
+                s = s.replace("  ", " ")
 
             # delete first letter if it's not alphabetic
             if not s[0].isalpha:

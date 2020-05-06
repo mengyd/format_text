@@ -6,6 +6,7 @@
 * **Add '.'** in the end of a line if not existed
 * Change the **',' into '.'** in the end of a line
 * Split the top and bottom **spaces** in a line
+* Delete **double spaces** in lines
 * Delete first caracter if it's **not alphabetic**
 * Delete all **blank** lines
 * Delete lines shorter than **4** words
@@ -47,6 +48,7 @@ ___________
 * 句尾加**句号**
 * 句尾**逗号**改成**句号**
 * 消除句子首尾**空格**
+* 删除句中的**双空格**
 * 删除**非字母**的头字符
 * 删除**空行**
 * 删除小于**4个**单词的句子
