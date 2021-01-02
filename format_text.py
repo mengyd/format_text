@@ -116,7 +116,6 @@ def write_text_into_file(filename: str = None, lines: [] = None):
         lines.clear()
     # close file
     f.close()
-    # TODO: delete .bak files
 
     return lines
 
