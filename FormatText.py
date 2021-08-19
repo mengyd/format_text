@@ -105,7 +105,7 @@ def repalce_file(filename: str = None):
     os.remove(filename)
     os.replace(filename+".bak", filename)
 
-def extract_text_in_file(filename: str = None, appeared_lines : [] = None):
+def extract_text_in_file(filename: str = None, appeared_lines = None):
     """
     read and return contents of a file
     """
@@ -128,7 +128,7 @@ def extract_text_in_file(filename: str = None, appeared_lines : [] = None):
     print("从", filename, "中读取", len(lines_in_file), "行。")
     return lines_in_file
 
-def write_text_into_file(filename: str = None, lines: [] = None):
+def write_text_into_file(filename: str = None, lines = None):
     """
     Write every 1000 lines of contents in the list into a file
     """
@@ -158,7 +158,7 @@ def write_text_into_file(filename: str = None, lines: [] = None):
 
     return lines
 
-def write_all_in_one_file(lines: [] = None):
+def write_all_in_one_file(lines = None):
     """
     write all lines into rest.txt
     """
