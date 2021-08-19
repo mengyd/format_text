@@ -20,6 +20,10 @@ def dfTextToExcel(filename, df_from_txt):
     output_name = filename.replace('.txt', '.xlsx')
     df_from_txt.to_excel(output_name, index=False)
 
+def deleteEmptyExcelFromTxt(textname):
+    excel_name = textname.replace('.txt', '.xlsx')
+    os.remove(excel_name)
+
 
 if __name__ == '__main__':
     # 选择工作目录
@@ -46,12 +50,16 @@ if __name__ == '__main__':
     with os.scandir(workpath) as filelist:
         for file in filelist:
             if file.name.endswith('.txt'):
-                # 读取TXT
-                df_from_txt = readText(file.name)
-                # 写入Excel
-                print("正在写入"+file.name)
-                print(df_from_txt)
-                dfTextToExcel(file.name, df_from_txt)
+                # 只读非空文件
+                if os.path.getsize(file.name) > 0 :
+                    # 读取TXT
+                    df_from_txt = readText(file.name)
+                    # 写入Excel
+                    print("正在写入"+file.name)
+                    print(df_from_txt)
+                    dfTextToExcel(file.name, df_from_txt)
+                else:
+                    deleteEmptyExcelFromTxt(file.name)
 
     # 遍历txt
     with os.scandir(workpath) as filelist:
