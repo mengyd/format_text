@@ -9,7 +9,7 @@ __version__ = "2.0"
 # minimum words 最少词数
 __min_words__ = 4
 # maximum caracters 最大字符数
-__max_caracters__ = 110
+__max_caracters__ = 1100
 # maximum lines 最大句子数
 __max_lines__ = 1000
 # choice for quiting
@@ -40,12 +40,12 @@ def format_text_by_file(filename: str = None):
             # print(s)
             # print("-" * 20)
             pass
-        elif ":" in s:
-            # delete line with ':'
-            # print("删除冒号")
-            # print(s)
-            # print("-" * 20)
-            pass
+        # elif ":" in s:
+        #     # delete line with ':'
+        #     # print("删除冒号")
+        #     # print(s)
+        #     # print("-" * 20)
+        #     pass
         else:
             # strip and capitalize the line
             s = s.strip().capitalize()
@@ -55,8 +55,8 @@ def format_text_by_file(filename: str = None):
                 s = s.replace("  ", " ")
 
             # delete first letter if it's not alphabetic
-            if not s[0].isalpha:
-                s = s[1:].strip().capitalize()
+            # if not s[0].isalpha:
+            #     s = s[1:].strip().capitalize()
 
             if s.endswith('.') or s.endswith('!') or s.endswith('?'):
                 pass
@@ -81,11 +81,11 @@ def format_text_by_file(filename: str = None):
                 # print(s)
                 # print("-" * 20)
                 pass
-            elif re.search(r'\d', s) is not None:
-                # delete if have numbers
-                # print("deleted num")
-                # print("删除数字句")
-                pass
+            # elif re.search(r'\d', s) is not None:
+            #     # delete if have numbers
+            #     # print("deleted num")
+            #     # print("删除数字句")
+            #     pass
             else:
                 # add into appeared list
                 appearedlines.append(s)
@@ -170,86 +170,92 @@ def write_all_in_one_file(lines: [] = None):
     frest.close()
     
 
+def text_formating_control_panel(workpath):
+
+    # Choice for operations
+    module_choice = __format_choice__
+
+    while True:
+
+        # ask for module to use
+        # module_choice = input("Please choose a operation( " + \
+        #                     __format_choice__ + " for formating, " + \
+        #                     __blend_choice__ + " for blending, " + \
+        #                     __delete_bak_choice__ + " for delete backup files, " + \
+        #                     __quit_choice__ + " for quiting. ) : ")
+        module_choice = input("请输入一个执行选项代码( " + \
+                            __format_choice__ + " 为标准化文档, " + \
+                            __blend_choice__ + " 为打乱文档内容, " + \
+                            __delete_bak_choice__ + " 为删除备份文件, " + \
+                            __quit_choice__ + " 为退出程序。 ) : ")
+        
+        if module_choice == __quit_choice__:
+            # print("quit...")
+            print("退出程序...")
+            break
+
+        # parse the working directory
+        with os.scandir(workpath) as filelist:
+            if module_choice == __format_choice__: # format texts
+                for txtfile in filelist:
+                    # do the formating for all the txt files
+                    if txtfile.name.endswith(".txt"):
+                        linenumber = format_text_by_file(filename=txtfile.name)
+                        repalce_file(filename=txtfile.name)
+                        # print(txtfile.name, "treated; ", linenumber, "lines")
+                        print(txtfile.name, "已处理; ", linenumber, "行")
+                        print("-" * 40)
+                # print("formating done!")
+                print("标准化 完成!")
+            elif module_choice == __blend_choice__: # blend texts
+                lines_in_folder = []
+                filenames_in_folder = []
+                for txtfile in filelist:
+                    # extract from all the txt files
+                    if txtfile.name.endswith(".txt"):
+                        # print("reading", txtfile.name)
+                        print("正在读取", txtfile.name)
+                        lines_in_folder.extend(extract_text_in_file(\
+                            filename=txtfile.name, appeared_lines=lines_in_folder))
+                        filenames_in_folder.append(txtfile.name)
+                # print("extracted", len(lines_in_folder), "lines")
+                print("共读取", len(lines_in_folder), "行")
+                # disorganize randomly the lines
+                random.shuffle(lines_in_folder)
+                # parse the folder
+                for file_name in filenames_in_folder:
+                    lines_in_folder = write_text_into_file(filename=file_name, lines=lines_in_folder)
+                # if we have more lines left
+                if len(lines_in_folder) > 0:
+                    # write them all into rest.txt
+                    write_all_in_one_file(lines=lines_in_folder)
+                # print("blending done!")
+                print("打乱 完成!")
+            # TODO: delete .bak files
+            elif module_choice == __delete_bak_choice__: # delete backup files
+                for backupfile in filelist:
+                    if backupfile.name.endswith(".bak"):
+                        os.remove(backupfile.name)
+                # print("deleting done!")
+                print("删除 完成!")
+                
+            print("-" * 40)
+
+
 ''' ----------------------------Main----------------------------- '''
-# Informations
-print(__software__,  "v"+__version__)
-print("Author :", __author__)
-print('-' * 40)
+if __name__ == '__main__':
+    # Informations
+    print(__software__,  "v"+__version__)
+    print("Author :", __author__)
+    print('-' * 40)
 
-# Choice for operations
-module_choice = __format_choice__
-
-while True:
     # get current working directory
     workpath = os.getcwd()
     print('<' * 40)
     print("Working in:", workpath)
     print('>' * 40)
 
-    # ask for module to use
-    # module_choice = input("Please choose a operation( " + \
-    #                     __format_choice__ + " for formating, " + \
-    #                     __blend_choice__ + " for blending, " + \
-    #                     __delete_bak_choice__ + " for delete backup files, " + \
-    #                     __quit_choice__ + " for quiting. ) : ")
-    module_choice = input("请输入一个执行选项代码( " + \
-                        __format_choice__ + " 为标准化文档, " + \
-                        __blend_choice__ + " 为打乱文档内容, " + \
-                        __delete_bak_choice__ + " 为删除备份文件, " + \
-                        __quit_choice__ + " 为退出程序。 ) : ")
-    
-    if module_choice == __quit_choice__:
-        # print("quit...")
-        print("退出程序...")
-        break
+    text_formating_control_panel(workpath)
 
-    # parse the working directory
-    with os.scandir(workpath) as filelist:
-        if module_choice == __format_choice__: # format texts
-            for txtfile in filelist:
-                # do the formating for all the txt files
-                if txtfile.name.endswith(".txt"):
-                    linenumber = format_text_by_file(filename=txtfile.name)
-                    repalce_file(filename=txtfile.name)
-                    # print(txtfile.name, "treated; ", linenumber, "lines")
-                    print(txtfile.name, "已处理; ", linenumber, "行")
-                    print("-" * 40)
-            # print("formating done!")
-            print("标准化 完成!")
-        elif module_choice == __blend_choice__: # blend texts
-            lines_in_folder = []
-            filenames_in_folder = []
-            for txtfile in filelist:
-                # extract from all the txt files
-                if txtfile.name.endswith(".txt"):
-                    # print("reading", txtfile.name)
-                    print("正在读取", txtfile.name)
-                    lines_in_folder.extend(extract_text_in_file(\
-                        filename=txtfile.name, appeared_lines=lines_in_folder))
-                    filenames_in_folder.append(txtfile.name)
-            # print("extracted", len(lines_in_folder), "lines")
-            print("共读取", len(lines_in_folder), "行")
-            # disorganize randomly the lines
-            random.shuffle(lines_in_folder)
-            # parse the folder
-            for file_name in filenames_in_folder:
-                lines_in_folder = write_text_into_file(filename=file_name, lines=lines_in_folder)
-            # if we have more lines left
-            if len(lines_in_folder) > 0:
-                # write them all into rest.txt
-                write_all_in_one_file(lines=lines_in_folder)
-            # print("blending done!")
-            print("打乱 完成!")
-        # TODO: delete .bak files
-        elif module_choice == __delete_bak_choice__: # delete backup files
-            for backupfile in filelist:
-                if backupfile.name.endswith(".bak"):
-                    os.remove(backupfile.name)
-            # print("deleting done!")
-            print("删除 完成!")
-            
-        print("-" * 40)
-
-
-# pause
-os.system('pause')
+    # pause
+    os.system('pause')
