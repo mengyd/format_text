@@ -13,7 +13,7 @@ def dfExcelToText(filename, source_df):
         f.write(df_string)
 
 def readText(filename):
-    df_from_txt = pd.read_csv(filename, sep="*")
+    df_from_txt = pd.read_csv(filename, sep="*", header=None)
     return df_from_txt
 
 def dfTextToExcel(filename, df_from_txt):
