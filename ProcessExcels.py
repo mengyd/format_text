@@ -18,7 +18,7 @@ def readText(filename):
 
 def dfTextToExcel(filename, df_from_txt):
     output_name = filename.replace('.txt', '.xlsx')
-    df_from_txt.to_excel(output_name, index=False)
+    df_from_txt.to_excel(output_name, index=False, header=False)
 
 def deleteEmptyExcelFromTxt(textname):
     excel_name = textname.replace('.txt', '.xlsx')
