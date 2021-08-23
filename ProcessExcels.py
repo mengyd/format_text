@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 def readExcel(filename):
-    source_df = pd.read_excel(filename)
+    source_df = pd.read_excel(filename, na_filter=False)
     return source_df
 
 def dfExcelToText(filename, source_df):
