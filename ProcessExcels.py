@@ -28,7 +28,7 @@ def deleteEmptyExcelFromTxt(textname):
 if __name__ == '__main__':
     # 选择工作目录
     while True:
-        workpath = input("输入目标文件夹（直接点击Enter为所在文件夹）：")
+        workpath = input("输入目标文件夹（直接点击Enter为所在父文件夹）：")
         if not workpath:
             workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))
             print("Working in", workpath)
