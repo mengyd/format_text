@@ -226,8 +226,8 @@ def text_formating_control_panel(workpath):
                 for txtfile in filelist:
                     # do the formating for all the txt files
                     if txtfile.name.endswith(".txt"):
-                        linenumber = format_text_by_file(filename=txtfile.name)
-                        repalce_file(filename=txtfile.name)
+                        linenumber = format_text_by_file(filename=txtfile.path)
+                        repalce_file(filename=txtfile.path)
                         # print(txtfile.name, "treated; ", linenumber, "lines")
                         print(txtfile.name, "已处理; ", linenumber, "行")
                         print("-" * 40)
@@ -242,8 +242,8 @@ def text_formating_control_panel(workpath):
                         # print("reading", txtfile.name)
                         print("正在读取", txtfile.name)
                         lines_in_folder.extend(extract_text_in_file(\
-                            filename=txtfile.name, appeared_lines=lines_in_folder))
-                        filenames_in_folder.append(txtfile.name)
+                            filename=txtfile.path, appeared_lines=lines_in_folder))
+                        filenames_in_folder.append(txtfile.path)
                 # print("extracted", len(lines_in_folder), "lines")
                 print("共读取", len(lines_in_folder), "行")
                 # disorganize randomly the lines
@@ -261,7 +261,7 @@ def text_formating_control_panel(workpath):
             elif module_choice == __delete_bak_choice__: # delete backup files
                 for backupfile in filelist:
                     if backupfile.name.endswith(".bak"):
-                        os.remove(backupfile.name)
+                        os.remove(backupfile.path)
                 # print("deleting done!")
                 print("删除 完成!")
                 
