@@ -1,6 +1,8 @@
 from FormatText import text_formating_control_panel
+from datetime import datetime
 import pandas as pd
 import os
+import shutil
 
 def readExcel(filename):
     source_df = pd.read_excel(filename, na_filter=False)
@@ -9,7 +11,7 @@ def readExcel(filename):
 def dfExcelToText(filename, source_df):
     output_name = filename.replace('.xlsx', '.txt')
     with open(output_name, 'w', encoding='utf-8') as f:
-        df_string = source_df.to_string(header=False, index=False)
+        df_string = source_df.to_string(index=False)
         f.write(df_string)
 
 def readText(filename):
@@ -20,7 +22,7 @@ def dfTextToExcel(filename, df_from_txt):
     output_name = filename.replace('.txt', '.xlsx')
     df_from_txt.to_excel(output_name, index=False, header=False)
 
-def deleteEmptyExcelFromTxt(textname):
+def deleteEmptyExcel(textname):
     excel_name = textname.replace('.txt', '.xlsx')
     os.remove(excel_name)
 
@@ -47,20 +49,39 @@ if __name__ == '__main__':
     # TXT操作
     text_formating_control_panel(workpath)
 
+    # 将原Excel文件移入备份文件夹
+    # 创建备份文件夹
+    now = datetime.now()
+    current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+    backup_dir = workpath+"/"+"backup excels "+current_time
+    os.makedirs(backup_dir, exist_ok=True)
+    # 遍历Excel
+    with os.scandir(workpath) as filelist:
+        for file in filelist:
+            if file.name.endswith('.xlsx'):
+                # 移入备份文件夹
+                shutil.move(file.path, backup_dir)
+            
+
     # 遍历TXT
     with os.scandir(workpath) as filelist:
+        output_counter = 0
         for file in filelist:
             if file.name.endswith('.txt'):
                 # 只读非空文件
                 if os.path.getsize(file.path) > 0 :
+                    output_counter += 1
                     # 读取TXT
                     df_from_txt = readText(file.path)
                     # 写入Excel
-                    print("正在写入"+file.name)
+                    if file.name == "rest.txt":
+                        output_name = file.name
+                    else:
+                        output_name = workpath + "/" + str(output_counter) + ".xlsx"
+                    print("+"*15)
+                    print("正在写入"+output_name)
                     print(df_from_txt)
-                    dfTextToExcel(file.path, df_from_txt)
-                else:
-                    deleteEmptyExcelFromTxt(file.path)
+                    dfTextToExcel(output_name, df_from_txt)
 
     # 遍历txt
     with os.scandir(workpath) as filelist:
