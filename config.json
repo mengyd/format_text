@@ -1,0 +1,10 @@
+{
+    "illegal characters": ":~@#$^&*()_+*/<>[]{}\/\"《》°“”",
+    "minimun words": 4,
+    "maximum characters": 1100,
+    "maximum lines": 1000,
+    "quit choice": "0",
+    "format choice": "1",
+    "blend choice": "2",
+    "delete backup choice": "3"
+}

@@ -1,3 +1,4 @@
+from loadconfig import loadConfig
 import os
 import re
 import random
@@ -6,25 +7,29 @@ __software__ = "FormatText"
 __author__ = "MENG Yidong"
 __version__ = "2.0"
 
-# minimum words 最少词数
-__min_words__ = 4
-# maximum caracters 最大字符数
-__max_caracters__ = 1100
-# maximum lines 最大句子数
-__max_lines__ = 1000
-# choice for quiting
-__quit_choice__ = "0"
-# choice for formating
-__format_choice__ = "1"
-# choice for blending
-__blend_choice__ = "2"
-# choice for delete backup file
-__delete_bak_choice__ = "3"
+
+__params__ = loadConfig()
+
+def control_illegal_characters(stringForControl):
+    # illegal characters 非法字符
+    __illegal_chars__ = __params__["illegal characters"]
+
+    for c in __illegal_chars__:
+        if c in stringForControl:
+            print("find: " + c)
+            stringForControl = stringForControl.replace(c, " ")
+            print("replaced by space")
+            print("*"*10)
+    return stringForControl
 
 def format_text_by_file(filename: str = None):
     """
     Format text in a certain way
     """
+    # minimum words 最少词数
+    __min_words__ = __params__["minimun words"]
+    # maximum characters 最大字符数
+    __max_characters__ = __params__["maximum characters"]
 
     linecounter = 0 
     appearedlines = []
@@ -47,6 +52,14 @@ def format_text_by_file(filename: str = None):
         #     # print("-" * 20)
         #     pass
         else:
+            
+            # transform n°
+            while "n°" in s:
+                s = s.replace("n°", "numéro ")
+                
+            # illegal characters control
+            s = control_illegal_characters(s)
+
             # strip and capitalize the line
             s = s.strip().capitalize()
 
@@ -70,7 +83,7 @@ def format_text_by_file(filename: str = None):
                 # print(s)
                 # print("-" * 20)
                 pass
-            elif len(s) > __max_caracters__:
+            elif len(s) > __max_characters__:
                 # delete if too long
                 # print("deleted long")
                 # print("删除长句")
@@ -132,6 +145,10 @@ def write_text_into_file(filename: str = None, lines = None):
     """
     Write every 1000 lines of contents in the list into a file
     """
+
+    # maximum lines 最大句子数
+    __max_lines__ = __params__["maximum lines"]
+
     # Create and open a file for writing
     f = open(filename, 'w', encoding='UTF-8')
     # if we have enough texts
@@ -172,6 +189,15 @@ def write_all_in_one_file(lines = None):
 
 def text_formating_control_panel(workpath):
 
+    # choice for quiting
+    __quit_choice__ = __params__["quit choice"]
+    # choice for formating
+    __format_choice__ = __params__["format choice"]
+    # choice for blending
+    __blend_choice__ = __params__["blend choice"]
+    # choice for delete backup file
+    __delete_bak_choice__ = __params__["delete backup choice"]
+
     # Choice for operations
     module_choice = __format_choice__
 
@@ -200,8 +226,8 @@ def text_formating_control_panel(workpath):
                 for txtfile in filelist:
                     # do the formating for all the txt files
                     if txtfile.name.endswith(".txt"):
-                        linenumber = format_text_by_file(filename=txtfile.name)
-                        repalce_file(filename=txtfile.name)
+                        linenumber = format_text_by_file(filename=txtfile.path)
+                        repalce_file(filename=txtfile.path)
                         # print(txtfile.name, "treated; ", linenumber, "lines")
                         print(txtfile.name, "已处理; ", linenumber, "行")
                         print("-" * 40)
@@ -216,8 +242,8 @@ def text_formating_control_panel(workpath):
                         # print("reading", txtfile.name)
                         print("正在读取", txtfile.name)
                         lines_in_folder.extend(extract_text_in_file(\
-                            filename=txtfile.name, appeared_lines=lines_in_folder))
-                        filenames_in_folder.append(txtfile.name)
+                            filename=txtfile.path, appeared_lines=lines_in_folder))
+                        filenames_in_folder.append(txtfile.path)
                 # print("extracted", len(lines_in_folder), "lines")
                 print("共读取", len(lines_in_folder), "行")
                 # disorganize randomly the lines
@@ -235,7 +261,7 @@ def text_formating_control_panel(workpath):
             elif module_choice == __delete_bak_choice__: # delete backup files
                 for backupfile in filelist:
                     if backupfile.name.endswith(".bak"):
-                        os.remove(backupfile.name)
+                        os.remove(backupfile.path)
                 # print("deleting done!")
                 print("删除 完成!")
                 
