@@ -28,7 +28,6 @@ def control_illegal_combinations(stringToControl):
             # print("+"*10, stringToControl, key)
             stringToControl = stringToControl.replace(key, __replacements__[key])
             # print(stringToControl, "-"*10)
-
     return stringToControl
 
 def format_text_by_file(filename: str = None):
@@ -69,8 +68,14 @@ def format_text_by_file(filename: str = None):
             # if not s[0].isalpha:
             #     s = s[1:].strip().capitalize()
 
-            # replace ',' by '.' at the end of the line
-            s = s.rstrip(',') + '.'
+            # replace ',' by '.' at the end of the line, add . if not exist
+            if s.endswith(',') or s.endswith(' '):
+                s = s.rstrip(',').rstrip(' ') + '.'
+
+            # remove space in front of the last punctuation
+            if s[-2] == ' ' and not s[-1].isalnum():
+                s = s.rstrip(s[-2]+s[-1]) + s[-1]
+
 
             if s in appearedlines:
                 # delete if the formatted line appealed already
