@@ -73,9 +73,9 @@ if __name__ == '__main__':
                     output_counter += 1
                     # 读取TXT
                     df_from_txt = readText(file.path)
-                    # 写入Excel
+                    # 写入Excel;不改变rest名字
                     if file.name == "rest.txt":
-                        output_name = file.name
+                        output_name = file.path
                     else:
                         output_name = workpath + "/" + str(output_counter) + ".xlsx"
                     print("+"*15)

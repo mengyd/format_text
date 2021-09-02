@@ -5,7 +5,7 @@ import random
 
 __software__ = "FormatText"
 __author__ = "MENG Yidong"
-__version__ = "2.0"
+__version__ = "2.1"
 
 
 __params__ = loadConfig()
@@ -16,7 +16,7 @@ def control_illegal_characters(stringForControl):
 
     for c in __illegal_chars__:
         if c in stringForControl:
-            print("find: " + c)
+            print("find '" + c + "'")
             stringForControl = stringForControl.replace(c, " ")
             print("replaced by space")
             print("*"*10)
@@ -28,6 +28,8 @@ def format_text_by_file(filename: str = None):
     """
     # minimum words 最少词数
     __min_words__ = __params__["minimun words"]
+    # maximum words 最大词数
+    __max_words__ = __params__["maximum words"]
     # maximum characters 最大字符数
     __max_characters__ = __params__["maximum characters"]
 
@@ -42,20 +44,12 @@ def format_text_by_file(filename: str = None):
         if s == "\n":
             # delete blank line
             # print("删除空行")
-            # print(s)
             # print("-" * 20)
             pass
-        # elif ":" in s:
-        #     # delete line with ':'
-        #     # print("删除冒号")
-        #     # print(s)
-        #     # print("-" * 20)
-        #     pass
         else:
             
             # transform n°
-            while "n°" in s:
-                s = s.replace("n°", "numéro ")
+            s = s.replace("n°", "numéro ")
                 
             # illegal characters control
             s = control_illegal_characters(s)
@@ -66,6 +60,10 @@ def format_text_by_file(filename: str = None):
             # delete mutiple spaces
             while "  " in s:
                 s = s.replace("  ", " ")
+
+            # delete ...
+            while "..." in s:
+                s = s.replace("...", " ")
 
             # delete first letter if it's not alphabetic
             # if not s[0].isalpha:
@@ -79,25 +77,23 @@ def format_text_by_file(filename: str = None):
 
             if s in appearedlines:
                 # delete if the formatted line appealed already
-                # print("删除重复")
-                # print(s)
+                # print("删除重复", s)
                 # print("-" * 20)
                 pass
-            elif len(s) > __max_characters__:
+            elif len(s) > __max_characters__ or len(s.split(' ')) > __max_words__:
                 # delete if too long
                 # print("deleted long")
-                # print("删除长句")
+                # print("删除长句", s)
+                # print("-" * 20)
                 pass 
             elif len(s.split(' ')) < __min_words__:
                 # delete line which is too short
-                # print("删除过短")
-                # print(s)
+                # print("删除过短", s)
                 # print("-" * 20)
                 pass
             # elif re.search(r'\d', s) is not None:
             #     # delete if have numbers
-            #     # print("deleted num")
-            #     # print("删除数字句")
+            #     # print("删除数字句", s)
             #     pass
             else:
                 # add into appeared list
@@ -175,11 +171,11 @@ def write_text_into_file(filename: str = None, lines = None):
 
     return lines
 
-def write_all_in_one_file(lines = None):
+def write_all_in_one_file(workpath, lines = None):
     """
     write all lines into rest.txt
     """
-    frest = open("rest.txt", 'w', encoding='UTF-8')
+    frest = open(workpath + "/rest.txt", 'w', encoding='UTF-8')
     frest.writelines(lines[:])
     print("+" * 30)
     print(len(lines), "lines left, writing into rest.txt")
@@ -254,7 +250,7 @@ def text_formating_control_panel(workpath):
                 # if we have more lines left
                 if len(lines_in_folder) > 0:
                     # write them all into rest.txt
-                    write_all_in_one_file(lines=lines_in_folder)
+                    write_all_in_one_file(workpath, lines=lines_in_folder)
                 # print("blending done!")
                 print("打乱 完成!")
             # TODO: delete .bak files

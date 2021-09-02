@@ -1,7 +1,8 @@
 {
     "illegal characters": ":~@#$^&*()_+*/<>[]{}\/\"《》°“”",
     "minimun words": 4,
-    "maximum characters": 1100,
+    "maximum words": 15,
+    "maximum characters": 2000,
     "maximum lines": 1000,
     "quit choice": "0",
     "format choice": "1",
