@@ -8,19 +8,28 @@ __author__ = "MENG Yidong"
 __version__ = "2.1"
 
 
-__params__ = loadConfig()
+__params__, __replacements__ = loadConfig()
 
-def control_illegal_characters(stringForControl):
+def control_illegal_characters(stringToControl):
     # illegal characters 非法字符
     __illegal_chars__ = __params__["illegal characters"]
 
     for c in __illegal_chars__:
-        if c in stringForControl:
+        if c in stringToControl:
             print("find '" + c + "'")
-            stringForControl = stringForControl.replace(c, " ")
+            stringToControl = stringToControl.replace(c, " ")
             print("replaced by space")
             print("*"*10)
-    return stringForControl
+    return stringToControl
+
+def control_illegal_combinations(stringToControl):
+    for key in __replacements__.keys():
+        if key in stringToControl:
+            # print("+"*10, stringToControl, key)
+            stringToControl = stringToControl.replace(key, __replacements__[key])
+            # print(stringToControl, "-"*10)
+
+    return stringToControl
 
 def format_text_by_file(filename: str = None):
     """
@@ -40,16 +49,11 @@ def format_text_by_file(filename: str = None):
     # create and open result file
     f2 = open(filename+".bak", 'w', encoding='UTF-8')
     # format line by line
-    for s in f1.readlines():
-        if s == "\n":
-            # delete blank line
-            # print("删除空行")
-            # print("-" * 20)
-            pass
-        else:
-            
-            # transform n°
-            s = s.replace("n°", "numéro ")
+    for s in f1.readlines():   
+        if s != "\n": # delete blank line
+
+            # illegal combinations control
+            s = control_illegal_combinations(s)
                 
             # illegal characters control
             s = control_illegal_characters(s)
@@ -61,19 +65,12 @@ def format_text_by_file(filename: str = None):
             while "  " in s:
                 s = s.replace("  ", " ")
 
-            # delete ...
-            while "..." in s:
-                s = s.replace("...", " ")
-
             # delete first letter if it's not alphabetic
             # if not s[0].isalpha:
             #     s = s[1:].strip().capitalize()
 
-            if s.endswith('.') or s.endswith('!') or s.endswith('?'):
-                pass
-            else:
-                # replace ',' by '.' at the end of the line
-                s = s.rstrip(',') + '.'
+            # replace ',' by '.' at the end of the line
+            s = s.rstrip(',') + '.'
 
             if s in appearedlines:
                 # delete if the formatted line appealed already
@@ -253,7 +250,6 @@ def text_formating_control_panel(workpath):
                     write_all_in_one_file(workpath, lines=lines_in_folder)
                 # print("blending done!")
                 print("打乱 完成!")
-            # TODO: delete .bak files
             elif module_choice == __delete_bak_choice__: # delete backup files
                 for backupfile in filelist:
                     if backupfile.name.endswith(".bak"):

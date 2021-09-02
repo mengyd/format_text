@@ -30,9 +30,9 @@ Put the ``format_text.py`` file into the folder with .txt files to format, then 
 3. Tap "3" for **deleting** all the .bak files in a folder 
 
 ### Constants
-Change the minimum words and maximum caracters in a line as we want : 
+Change the configurations as we want : 
 * Minimum words : 
-  * Change the value here at the top of the "format_text.py" file : ``__min_words__ = 4``
+  * Change the value here in the "config.json" file : ``__min_words__ = 4``
 * Maximum caracters :
   * Change the value here just below the minimum words : 
   ``__max_caracters__ = 110``
@@ -72,17 +72,17 @@ ___________
 3. 输入 "3" 以执行**删除** 文件夹中所有.bak文件
 
 #### 常量
-可根据需要改变要求的最小单词数和最大字符数 : 
+可根据需要改变设置 : 
 * 调整**最小单词数** : 
-  * 在 "format_text.py" 文件顶部改变这里的数值 : <br>
+  * 在 "config.json" 文件改变这里的数值 : <br>
   ``__min_words__ = 4``
 
 
 * 调整**最大字符数** :
-  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最小单词数下面）: <br>
+  * 改变这里的数值: <br>
   ``__max_caracters__ = 110``
 
 
 * 调整**最大句子数** :
-  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最大字符数下面）: <br>
+  * 改变这里的数值: <br>
   ``__max_lines__ = 1000``
