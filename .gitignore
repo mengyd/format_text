@@ -1,5 +1,4 @@
 *.xlsx
-__pycache__
 *.txt
 *.zip
 */
