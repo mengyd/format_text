@@ -73,7 +73,7 @@ def format_text_by_file(filename: str = None):
                 s = s.rstrip(',').rstrip(' ') + '.'
 
             # remove space in front of the last punctuation
-            if s[-2] == ' ' and not s[-1].isalnum():
+            if len(s) > 1 and s[-2] == ' ' and not s[-1].isalnum():
                 s = s.rstrip(s[-2]+s[-1]) + s[-1]
 
 
