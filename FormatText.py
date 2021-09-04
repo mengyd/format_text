@@ -69,7 +69,7 @@ def format_text_by_file(filename: str = None):
             #     s = s[1:].strip().capitalize()
 
             # replace ',' by '.' at the end of the line, add . if not exist
-            if s.endswith(',') or s.endswith(' '):
+            if s.endswith(',') or s.endswith(' ') or (len(s)>0 and s[-1].isalnum()):
                 s = s.rstrip(',').rstrip(' ') + '.'
 
             # remove space in front of the last punctuation
