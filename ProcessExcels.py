@@ -9,7 +9,11 @@ def readExcel(filename):
     return source_df
 
 def dfExcelToText(filename, source_df):
-    output_name = filename.replace('.xlsx', '.txt')
+    if filename.endswith('xls'):
+        output_name = filename.replace('.xls', '.txt')
+    else:
+        output_name = filename.replace('.xlsx', '.txt').replace('.xltx', '.txt')
+        
     with open(output_name, 'w', encoding='utf-8') as f:
         df_string = source_df.to_string(index=False)
         f.write(df_string)
@@ -40,7 +44,7 @@ if __name__ == '__main__':
     # 遍历Excel
     with os.scandir(workpath) as filelist:
         for file in filelist:
-            if file.name.endswith('.xlsx'):
+            if file.name.endswith('.xlsx') or file.name.endswith('.xls') or file.name.endswith('xltx'):
                 # 读取Excel
                 source_df = readExcel(file.path)
                 # 写入TXT
@@ -58,7 +62,7 @@ if __name__ == '__main__':
     # 遍历Excel
     with os.scandir(workpath) as filelist:
         for file in filelist:
-            if file.name.endswith('.xlsx'):
+            if file.name.endswith('.xlsx') or file.name.endswith('.xls') or file.name.endswith('xltx'):
                 # 移入备份文件夹
                 shutil.move(file.path, backup_dir)
             
