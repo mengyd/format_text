@@ -30,17 +30,7 @@ def deleteEmptyExcel(textname):
     excel_name = textname.replace('.txt', '.xlsx')
     os.remove(excel_name)
 
-
-if __name__ == '__main__':
-    # 选择工作目录
-    while True:
-        workpath = input("输入目标文件夹（直接点击Enter为所在父文件夹）：")
-        if not workpath:
-            workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))
-            print("Working in", workpath)
-        if os.path.isdir(workpath):
-            break
-    
+def controlPanel_processExcel(workpath):
     # 遍历Excel
     with os.scandir(workpath) as filelist:
         for file in filelist:
@@ -66,7 +56,6 @@ if __name__ == '__main__':
                 # 移入备份文件夹
                 shutil.move(file.path, backup_dir)
             
-
     # 遍历TXT
     with os.scandir(workpath) as filelist:
         output_counter = 0
@@ -93,6 +82,19 @@ if __name__ == '__main__':
             if file.name.endswith('.txt'):
                 # 删除txt
                 os.remove(file.path)
+
+
+if __name__ == '__main__':
+    # 选择工作目录
+    while True:
+        workpath = input("输入目标文件夹（直接点击Enter为所在父文件夹）：")
+        if not workpath:
+            workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))
+            print("Working in", workpath)
+        if os.path.isdir(workpath):
+            break
+    
+    controlPanel_processExcel(workpath)
 
     # pause
     os.system('pause')
