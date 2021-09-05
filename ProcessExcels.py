@@ -3,6 +3,9 @@ from datetime import datetime
 import pandas as pd
 import os
 import shutil
+import loadconfig
+
+__params__ = loadconfig.loadParams()
 
 def readExcel(filename):
     source_df = pd.read_excel(filename, na_filter=False)
@@ -47,7 +50,7 @@ def controlPanel_processExcel(workpath):
     # 创建备份文件夹
     now = datetime.now()
     current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
-    backup_dir = workpath+"/"+"backup excels "+current_time
+    backup_dir = workpath+__params__["backup_excel folder"]+current_time
     os.makedirs(backup_dir, exist_ok=True)
     # 遍历Excel
     with os.scandir(workpath) as filelist:
@@ -70,7 +73,7 @@ def controlPanel_processExcel(workpath):
                     if file.name == "rest.txt":
                         output_name = file.path
                     else:
-                        output_name = workpath + "/" + str(output_counter) + ".xlsx"
+                        output_name = workpath + str(output_counter) + ".xlsx"
                     print("+"*15)
                     print("正在写入"+output_name)
                     print(df_from_txt)
@@ -89,7 +92,7 @@ if __name__ == '__main__':
     while True:
         workpath = input("输入目标文件夹（直接点击Enter为所在父文件夹）：")
         if not workpath:
-            workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))
+            workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))+"/"
             print("Working in", workpath)
         if os.path.isdir(workpath):
             break

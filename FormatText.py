@@ -177,14 +177,13 @@ def write_all_in_one_file(workpath, lines = None):
     """
     write all lines into rest.txt
     """
-    frest = open(workpath + "/rest.txt", 'w', encoding='UTF-8')
+    frest = open(workpath + __params__["redundancy_file name"], 'w', encoding='UTF-8')
     frest.writelines(lines[:])
     print("+" * 30)
     print(len(lines), "lines left, writing into rest.txt")
     print("+" * 30, "\n")
     frest.close()
     
-
 def text_formating_control_panel(workpath):
 
     # choice for quiting
@@ -273,7 +272,7 @@ if __name__ == '__main__':
     print('-' * 40)
 
     # get current working directory
-    workpath = os.getcwd()
+    workpath = os.getcwd() + "/"
     print('<' * 40)
     print("Working in:", workpath)
     print('>' * 40)
