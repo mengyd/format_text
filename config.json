@@ -9,5 +9,6 @@
     "blend choice": "2",
     "delete backup choice": "3",
     "backup_excel folder": "backup excels ",
-    "redundancy_file name": "rest.txt"
+    "redundancy_file name": "rest.txt",
+    "required lang": "fr"
 }

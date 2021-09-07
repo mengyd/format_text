@@ -8,7 +8,7 @@ __author__ = "MENG Yidong"
 __version__ = "2.1"
 
 
-__params__, __replacements__ = loadConfig()
+__params__, __replacements__, __bullshits__ = loadConfig()
 
 def control_illegal_characters(stringToControl):
     # illegal characters 非法字符
@@ -29,6 +29,13 @@ def control_illegal_combinations(stringToControl):
             stringToControl = stringToControl.replace(key, __replacements__[key])
             # print(stringToControl, "-"*10)
     return stringToControl
+
+def has_bullshits(stringToControl):
+    lang = __params__["required lang"]
+    for bullshit in __bullshits__[lang]:
+        if bullshit in stringToControl:
+            return True
+    return False
 
 def format_text_by_file(filename: str = None):
     """
@@ -92,6 +99,9 @@ def format_text_by_file(filename: str = None):
                 # delete line which is too short
                 # print("删除过短", s)
                 # print("-" * 20)
+                pass
+            elif has_bullshits(s):
+                # delete if has sensitive words
                 pass
             # elif re.search(r'\d', s) is not None:
             #     # delete if have numbers

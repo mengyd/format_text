@@ -14,9 +14,17 @@ def loadReplacements(replacements_path=None):
     replacements = json.load(f)
     return replacements
 
+def loadBullshits(bullshits_path=None):
+    if not bullshits_path:
+        bullshits_path = os.path.abspath(os.path.join(os.getcwd(), ""))+'/bullshits.json'
+    f = open(bullshits_path,'r', encoding='UTF-8')
+    bullshits = json.load(f)
+    return bullshits
+
 def loadConfig():
     workpath = os.path.abspath(os.path.join(os.getcwd(), ""))
     params = loadParams(workpath+'/config.json')
     replacements = loadReplacements(workpath+'/replacements.json')
-    return params, replacements
+    bullshits = loadReplacements(workpath+'/bullshits.json')
+    return params, replacements, bullshits
 
