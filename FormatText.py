@@ -30,11 +30,18 @@ def control_illegal_combinations(stringToControl):
             # print(stringToControl, "-"*10)
     return stringToControl
 
+def is_real_bullshit(bullshit):
+    if len(bullshit) > 1:
+        return True
+    return False
+
 def has_bullshits(stringToControl):
     lang = __params__["required lang"]
     for bullshit in __bullshits__[lang]:
-        if bullshit in stringToControl:
-            return True
+        if bullshit in stringToControl and is_real_bullshit(bullshit):
+            for word in stringToControl.split(" "):
+                if bullshit == word.strip(" ,.!?"):
+                    return True
     return False
 
 def format_text_by_file(filename: str = None):
