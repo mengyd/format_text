@@ -5,7 +5,7 @@ import random
 
 __software__ = "FormatText"
 __author__ = "MENG Yidong"
-__version__ = "2.1"
+__version__ = "2.2"
 
 
 __params__, __replacements__, __bullshits__ = loadConfig()
@@ -37,11 +37,14 @@ def is_real_bullshit(bullshit):
 
 def has_bullshits(stringToControl):
     lang = __params__["required lang"]
-    for bullshit in __bullshits__[lang]:
-        if bullshit in stringToControl and is_real_bullshit(bullshit):
-            for word in stringToControl.split(" "):
-                if bullshit == word.strip(" ,.!?"):
-                    return True
+    try:
+        for bullshit in __bullshits__[lang]:
+            if bullshit in stringToControl and is_real_bullshit(bullshit):
+                for word in stringToControl.split(" "):
+                    if bullshit == word.strip(" ,.!?"):
+                        return True
+    except Exception:
+        pass
     return False
 
 def format_text_by_file(filename: str = None):
@@ -102,7 +105,7 @@ def format_text_by_file(filename: str = None):
                 # print("删除长句", s)
                 # print("-" * 20)
                 pass 
-            elif len(s.split(' ')) < __min_words__:
+            elif len(s.split(' ')) < __min_words__ and __params__["required lang"]!="zh":
                 # delete line which is too short
                 # print("删除过短", s)
                 # print("-" * 20)
@@ -133,7 +136,7 @@ def repalce_file(filename: str = None):
     os.remove(filename)
     os.replace(filename+".bak", filename)
 
-def extract_text_in_file(filename: str = None, appeared_lines = None):
+def extract_text_in_file(filename: str = None, appeared_lines = [], disallow_repeat = True, save_bak = True):
     """
     read and return contents of a file
     """
@@ -142,7 +145,7 @@ def extract_text_in_file(filename: str = None, appeared_lines = None):
     f = open(filename, 'r', encoding='UTF-8')
     # read file line by line
     for s in f.readlines():
-        if s in appeared_lines:
+        if (s in appeared_lines) and disallow_repeat:
             # delete(ignore) if the line appealed already
             pass
         else:
@@ -150,9 +153,9 @@ def extract_text_in_file(filename: str = None, appeared_lines = None):
 
     # close the files
     f.close()
-    # rename file to .bak
-    os.replace(filename, filename+".bak")
-    # print("extracted", len(lines_in_file), "lines in", filename)
+    if save_bak:
+        # rename file to .bak
+        os.replace(filename, filename+".bak")
     print("从", filename, "中读取", len(lines_in_file), "行。")
     return lines_in_file
 
@@ -197,9 +200,43 @@ def write_all_in_one_file(workpath, lines = None):
     frest = open(workpath + __params__["redundancy_file name"], 'w', encoding='UTF-8')
     frest.writelines(lines[:])
     print("+" * 30)
-    print(len(lines), "lines left, writing into rest.txt")
+    print(len(lines), "lines left, writing into "+__params__["redundancy_file name"])
     print("+" * 30, "\n")
     frest.close()
+
+def isIgnoredFile(filename):
+    for element in __params__["ignored file"]:
+        if element in filename:
+            return True
+    return False
+
+def find_words(workpath):
+    while True:
+        keyword = input("请输入要查找的关键字：")
+        if keyword:
+            print("查找："+keyword)
+            break
+    list_keywordLines = []
+    # parse working directory
+    with os.scandir(workpath) as filelist:
+        for file in filelist:
+            if file.name.endswith('.txt') and os.path.getsize(file.path) > 0 and not isIgnoredFile(file.name):
+                extractedlines = extract_text_in_file(filename=file.path,disallow_repeat=False,save_bak=False)
+                lineCounter = 0
+                # if the sentence has keyword
+                for line in extractedlines:
+                    lineCounter += 1
+                    # put keyword in list
+                    if keyword in line:
+                        list_keywordLines.append(line.strip().rstrip("\n")+"\t"+file.name.rstrip(".txt")+"\t"+str(lineCounter))
+
+    # write list into file named by keyword
+    filename = workpath+keyword + "_查询结果.txt"
+    print("查询结果已输出至："+filename)
+    fKeyword = open(filename, 'a', encoding='UTF-8')
+    for line in list_keywordLines:
+        fKeyword.write(line + "\n")
+    fKeyword.close()
     
 def text_formating_control_panel(workpath):
 
@@ -211,22 +248,20 @@ def text_formating_control_panel(workpath):
     __blend_choice__ = __params__["blend choice"]
     # choice for delete backup file
     __delete_bak_choice__ = __params__["delete backup choice"]
+    # choice for searching keywords
+    __search_keyword_choice__ = __params__["search keyword choice"]
 
     # Choice for operations
     module_choice = __format_choice__
 
+    ops = []
     while True:
-
         # ask for module to use
-        # module_choice = input("Please choose a operation( " + \
-        #                     __format_choice__ + " for formating, " + \
-        #                     __blend_choice__ + " for blending, " + \
-        #                     __delete_bak_choice__ + " for delete backup files, " + \
-        #                     __quit_choice__ + " for quiting. ) : ")
         module_choice = input("请输入一个执行选项代码( " + \
                             __format_choice__ + " 为标准化文档, " + \
                             __blend_choice__ + " 为打乱文档内容, " + \
                             __delete_bak_choice__ + " 为删除备份文件, " + \
+                            __search_keyword_choice__ + " 为搜索关键词, " + \
                             __quit_choice__ + " 为退出程序。 ) : ")
         
         if module_choice == __quit_choice__:
@@ -239,7 +274,7 @@ def text_formating_control_panel(workpath):
             if module_choice == __format_choice__: # format texts
                 for txtfile in filelist:
                     # do the formating for all the txt files
-                    if txtfile.name.endswith(".txt"):
+                    if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
                         linenumber = format_text_by_file(filename=txtfile.path)
                         repalce_file(filename=txtfile.path)
                         # print(txtfile.name, "treated; ", linenumber, "lines")
@@ -252,7 +287,7 @@ def text_formating_control_panel(workpath):
                 filenames_in_folder = []
                 for txtfile in filelist:
                     # extract from all the txt files
-                    if txtfile.name.endswith(".txt"):
+                    if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
                         # print("reading", txtfile.name)
                         print("正在读取", txtfile.name)
                         lines_in_folder.extend(extract_text_in_file(\
@@ -277,8 +312,13 @@ def text_formating_control_panel(workpath):
                         os.remove(backupfile.path)
                 # print("deleting done!")
                 print("删除 完成!")
+            elif module_choice == __search_keyword_choice__: # search keyword
+                find_words(workpath)
                 
+            ops.append(module_choice)
             print("-" * 40)
+
+    return ops
 
 
 ''' ----------------------------Main----------------------------- '''
