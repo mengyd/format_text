@@ -30,9 +30,9 @@ Put the ``format_text.py`` file into the folder with .txt files to format, then 
 3. Tap "3" for **deleting** all the .bak files in a folder 
 
 ### Constants
-Change the minimum words and maximum caracters in a line as we want : 
+Change the configurations as we want : 
 * Minimum words : 
-  * Change the value here at the top of the "format_text.py" file : ``__min_words__ = 4``
+  * Change the value here in the "config.json" file : ``__min_words__ = 4``
 * Maximum caracters :
   * Change the value here just below the minimum words : 
   ``__max_caracters__ = 110``
@@ -42,7 +42,8 @@ Change the minimum words and maximum caracters in a line as we want :
 
 ___________
 
-### 功能
+### 更新
+2020-05-02:
 * 标准化一个**文件夹**中的所有txt文档的格式
 * 首字母**大写**
 * 句尾加**句号**
@@ -51,8 +52,7 @@ ___________
 * 删除句中的**双空格**
 * 删除**非字母**的头字符
 * 删除**空行**
-* 删除小于**4个**单词的句子
-* 删除带**冒号**的句子
+* 删除小于**n个**单词的句子
 * 删除**重复行**
 * 删除**过长**的句子
 * 删除**带数字**的句子
@@ -60,6 +60,32 @@ ___________
 * **随机**打乱一个文件夹中所有txt文件中的句子，并将打乱后的句子重新分配至不同文件中
 * 在**文件夹**尺度上删除**重复**句子
 * 删除**备份文件（.bak）**
+
+2021-08-19:
+* 处理写在Excel上的句子
+
+2021-08-25:
+* 将新Excel按数字命名，旧文件存入备份文件夹
+* 加入config.json文件，可自定义参数
+
+2021-09-02:
+* 删除**省略号**
+* 删除或替换非法字符
+* 删除句末标点前的空格
+* 删除或替换非法多字符组合
+* 加入replacement.json文件，可自定义非法组合及对应的替换内容
+* 删除大于**n个**单词的句子
+
+2021-09-04:
+* 支持 xls 和 xltx 格式的Excel文件
+
+2021-09-05:
+* 移动备份文件夹名和多余句文件名等参数至config.json中
+* 可单独调用``loadParams()``和``loadReplacements()``函数
+
+2021-09-07:
+* 删除含敏感词的句子
+* 在bullshits.json中按语言定义敏感词
 
 ### 用法
 把 ``format_text.py`` 文件放入含有待审核的txt文档的文件夹内, 然后**运行**该脚本就行了。
@@ -72,17 +98,17 @@ ___________
 3. 输入 "3" 以执行**删除** 文件夹中所有.bak文件
 
 #### 常量
-可根据需要改变要求的最小单词数和最大字符数 : 
+可根据需要改变设置 : 
 * 调整**最小单词数** : 
-  * 在 "format_text.py" 文件顶部改变这里的数值 : <br>
+  * 在 "config.json" 文件改变这里的数值 : <br>
   ``__min_words__ = 4``
 
 
 * 调整**最大字符数** :
-  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最小单词数下面）: <br>
+  * 改变这里的数值: <br>
   ``__max_caracters__ = 110``
 
 
 * 调整**最大句子数** :
-  * 改变这里的数值（ 在 "format_text.py" 文件顶部，在最大字符数下面）: <br>
+  * 改变这里的数值: <br>
   ``__max_lines__ = 1000``

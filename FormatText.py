@@ -5,22 +5,44 @@ import random
 
 __software__ = "FormatText"
 __author__ = "MENG Yidong"
-__version__ = "2.0"
+__version__ = "2.1"
 
 
-__params__ = loadConfig()
+__params__, __replacements__, __bullshits__ = loadConfig()
 
-def control_illegal_characters(stringForControl):
+def control_illegal_characters(stringToControl):
     # illegal characters 非法字符
     __illegal_chars__ = __params__["illegal characters"]
 
     for c in __illegal_chars__:
-        if c in stringForControl:
-            print("find: " + c)
-            stringForControl = stringForControl.replace(c, " ")
+        if c in stringToControl:
+            print("find '" + c + "'")
+            stringToControl = stringToControl.replace(c, " ")
             print("replaced by space")
             print("*"*10)
-    return stringForControl
+    return stringToControl
+
+def control_illegal_combinations(stringToControl):
+    for key in __replacements__.keys():
+        if key in stringToControl:
+            # print("+"*10, stringToControl, key)
+            stringToControl = stringToControl.replace(key, __replacements__[key])
+            # print(stringToControl, "-"*10)
+    return stringToControl
+
+def is_real_bullshit(bullshit):
+    if len(bullshit) > 1:
+        return True
+    return False
+
+def has_bullshits(stringToControl):
+    lang = __params__["required lang"]
+    for bullshit in __bullshits__[lang]:
+        if bullshit in stringToControl and is_real_bullshit(bullshit):
+            for word in stringToControl.split(" "):
+                if bullshit == word.strip(" ,.!?"):
+                    return True
+    return False
 
 def format_text_by_file(filename: str = None):
     """
@@ -28,6 +50,8 @@ def format_text_by_file(filename: str = None):
     """
     # minimum words 最少词数
     __min_words__ = __params__["minimun words"]
+    # maximum words 最大词数
+    __max_words__ = __params__["maximum words"]
     # maximum characters 最大字符数
     __max_characters__ = __params__["maximum characters"]
 
@@ -38,24 +62,11 @@ def format_text_by_file(filename: str = None):
     # create and open result file
     f2 = open(filename+".bak", 'w', encoding='UTF-8')
     # format line by line
-    for s in f1.readlines():
-        if s == "\n":
-            # delete blank line
-            # print("删除空行")
-            # print(s)
-            # print("-" * 20)
-            pass
-        # elif ":" in s:
-        #     # delete line with ':'
-        #     # print("删除冒号")
-        #     # print(s)
-        #     # print("-" * 20)
-        #     pass
-        else:
-            
-            # transform n°
-            while "n°" in s:
-                s = s.replace("n°", "numéro ")
+    for s in f1.readlines():   
+        if s != "\n": # delete blank line
+
+            # illegal combinations control
+            s = control_illegal_combinations(s)
                 
             # illegal characters control
             s = control_illegal_characters(s)
@@ -71,33 +82,37 @@ def format_text_by_file(filename: str = None):
             # if not s[0].isalpha:
             #     s = s[1:].strip().capitalize()
 
-            if s.endswith('.') or s.endswith('!') or s.endswith('?'):
-                pass
-            else:
-                # replace ',' by '.' at the end of the line
-                s = s.rstrip(',') + '.'
+            # replace ',' by '.' at the end of the line, add . if not exist
+            if s.endswith(',') or s.endswith(' ') or (len(s)>0 and s[-1].isalnum()):
+                s = s.rstrip(',').rstrip(' ') + '.'
+
+            # remove space in front of the last punctuation
+            if len(s) > 1 and s[-2] == ' ' and not s[-1].isalnum():
+                s = s.rstrip(s[-2]+s[-1]) + s[-1]
+
 
             if s in appearedlines:
                 # delete if the formatted line appealed already
-                # print("删除重复")
-                # print(s)
+                # print("删除重复", s)
                 # print("-" * 20)
                 pass
-            elif len(s) > __max_characters__:
+            elif len(s) > __max_characters__ or len(s.split(' ')) > __max_words__:
                 # delete if too long
                 # print("deleted long")
-                # print("删除长句")
+                # print("删除长句", s)
+                # print("-" * 20)
                 pass 
             elif len(s.split(' ')) < __min_words__:
                 # delete line which is too short
-                # print("删除过短")
-                # print(s)
+                # print("删除过短", s)
                 # print("-" * 20)
+                pass
+            elif has_bullshits(s):
+                # delete if has sensitive words
                 pass
             # elif re.search(r'\d', s) is not None:
             #     # delete if have numbers
-            #     # print("deleted num")
-            #     # print("删除数字句")
+            #     # print("删除数字句", s)
             #     pass
             else:
                 # add into appeared list
@@ -175,18 +190,17 @@ def write_text_into_file(filename: str = None, lines = None):
 
     return lines
 
-def write_all_in_one_file(lines = None):
+def write_all_in_one_file(workpath, lines = None):
     """
     write all lines into rest.txt
     """
-    frest = open("rest.txt", 'w', encoding='UTF-8')
+    frest = open(workpath + __params__["redundancy_file name"], 'w', encoding='UTF-8')
     frest.writelines(lines[:])
     print("+" * 30)
     print(len(lines), "lines left, writing into rest.txt")
     print("+" * 30, "\n")
     frest.close()
     
-
 def text_formating_control_panel(workpath):
 
     # choice for quiting
@@ -254,10 +268,9 @@ def text_formating_control_panel(workpath):
                 # if we have more lines left
                 if len(lines_in_folder) > 0:
                     # write them all into rest.txt
-                    write_all_in_one_file(lines=lines_in_folder)
+                    write_all_in_one_file(workpath, lines=lines_in_folder)
                 # print("blending done!")
                 print("打乱 完成!")
-            # TODO: delete .bak files
             elif module_choice == __delete_bak_choice__: # delete backup files
                 for backupfile in filelist:
                     if backupfile.name.endswith(".bak"):
@@ -276,7 +289,7 @@ if __name__ == '__main__':
     print('-' * 40)
 
     # get current working directory
-    workpath = os.getcwd()
+    workpath = os.getcwd() + "/"
     print('<' * 40)
     print("Working in:", workpath)
     print('>' * 40)
