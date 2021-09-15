@@ -210,12 +210,14 @@ def isIgnoredFile(filename):
             return True
     return False
 
-def find_words(workpath):
+def askForKeyword():
     while True:
         keyword = input("请输入要查找的关键字：")
         if keyword:
             print("查找："+keyword)
-            break
+            return keyword
+
+def find_words(workpath, keyword):
     list_keywordLines = []
     # parse working directory
     with os.scandir(workpath) as filelist:
@@ -238,8 +240,35 @@ def find_words(workpath):
         fKeyword.write(line + "\n")
     fKeyword.close()
     
-def text_formating_control_panel(workpath):
+def askForOption():    
+    # choice for quiting
+    __quit_choice__ = __params__["quit choice"]
+    # choice for formating
+    __format_choice__ = __params__["format choice"]
+    # choice for blending
+    __blend_choice__ = __params__["blend choice"]
+    # choice for delete backup file
+    __delete_bak_choice__ = __params__["delete backup choice"]
+    # choice for searching keywords
+    __search_keyword_choice__ = __params__["search keyword choice"]
+    
+    # Choice for operations
+    module_choice = __format_choice__
+    keyword = ""
+    # ask for module to use
+    module_choice = input("请输入一个执行选项代码( " + \
+                        __format_choice__ + " 为标准化文档, " + \
+                        __blend_choice__ + " 为打乱文档内容, " + \
+                        __delete_bak_choice__ + " 为删除备份文件, " + \
+                        __search_keyword_choice__ + " 为搜索关键词, " + \
+                        __quit_choice__ + " 为退出程序。 ) : ")
 
+    if module_choice == __search_keyword_choice__:
+        keyword = askForKeyword()
+
+    return module_choice, keyword
+
+def text_formating_control_panel(workpath, module_choice, keyword=""):
     # choice for quiting
     __quit_choice__ = __params__["quit choice"]
     # choice for formating
@@ -251,90 +280,77 @@ def text_formating_control_panel(workpath):
     # choice for searching keywords
     __search_keyword_choice__ = __params__["search keyword choice"]
 
-    # Choice for operations
-    module_choice = __format_choice__
-
-    ops = []
-    while True:
-        # ask for module to use
-        module_choice = input("请输入一个执行选项代码( " + \
-                            __format_choice__ + " 为标准化文档, " + \
-                            __blend_choice__ + " 为打乱文档内容, " + \
-                            __delete_bak_choice__ + " 为删除备份文件, " + \
-                            __search_keyword_choice__ + " 为搜索关键词, " + \
-                            __quit_choice__ + " 为退出程序。 ) : ")
-        
-        if module_choice == __quit_choice__:
-            # print("quit...")
-            print("退出程序...")
-            break
-
-        # parse the working directory
-        with os.scandir(workpath) as filelist:
-            if module_choice == __format_choice__: # format texts
-                for txtfile in filelist:
-                    # do the formating for all the txt files
-                    if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
-                        linenumber = format_text_by_file(filename=txtfile.path)
-                        repalce_file(filename=txtfile.path)
-                        # print(txtfile.name, "treated; ", linenumber, "lines")
-                        print(txtfile.name, "已处理; ", linenumber, "行")
-                        print("-" * 40)
-                # print("formating done!")
-                print("标准化 完成!")
-            elif module_choice == __blend_choice__: # blend texts
-                lines_in_folder = []
-                filenames_in_folder = []
-                for txtfile in filelist:
-                    # extract from all the txt files
-                    if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
-                        # print("reading", txtfile.name)
-                        print("正在读取", txtfile.name)
-                        lines_in_folder.extend(extract_text_in_file(\
-                            filename=txtfile.path, appeared_lines=lines_in_folder))
-                        filenames_in_folder.append(txtfile.path)
-                # print("extracted", len(lines_in_folder), "lines")
-                print("共读取", len(lines_in_folder), "行")
-                # disorganize randomly the lines
-                random.shuffle(lines_in_folder)
-                # parse the folder
-                for file_name in filenames_in_folder:
-                    lines_in_folder = write_text_into_file(filename=file_name, lines=lines_in_folder)
-                # if we have more lines left
-                if len(lines_in_folder) > 0:
-                    # write them all into rest.txt
-                    write_all_in_one_file(workpath, lines=lines_in_folder)
-                # print("blending done!")
-                print("打乱 完成!")
-            elif module_choice == __delete_bak_choice__: # delete backup files
-                for backupfile in filelist:
-                    if backupfile.name.endswith(".bak"):
-                        os.remove(backupfile.path)
-                # print("deleting done!")
-                print("删除 完成!")
-            elif module_choice == __search_keyword_choice__: # search keyword
-                find_words(workpath)
-                
-            ops.append(module_choice)
-            print("-" * 40)
-
-    return ops
+    # parse the working directory
+    with os.scandir(workpath) as filelist:
+        if module_choice == __format_choice__: # format texts
+            for txtfile in filelist:
+                # do the formating for all the txt files
+                if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
+                    linenumber = format_text_by_file(filename=txtfile.path)
+                    repalce_file(filename=txtfile.path)
+                    # print(txtfile.name, "treated; ", linenumber, "lines")
+                    print(txtfile.name, "已处理; ", linenumber, "行")
+                    print("-" * 40)
+            # print("formating done!")
+            print("标准化 完成!")
+        elif module_choice == __blend_choice__: # blend texts
+            lines_in_folder = []
+            filenames_in_folder = []
+            for txtfile in filelist:
+                # extract from all the txt files
+                if txtfile.name.endswith(".txt") and not isIgnoredFile(txtfile.name):
+                    # print("reading", txtfile.name)
+                    print("正在读取", txtfile.name)
+                    lines_in_folder.extend(extract_text_in_file(\
+                        filename=txtfile.path, appeared_lines=lines_in_folder))
+                    filenames_in_folder.append(txtfile.path)
+            # print("extracted", len(lines_in_folder), "lines")
+            print("共读取", len(lines_in_folder), "行")
+            # disorganize randomly the lines
+            random.shuffle(lines_in_folder)
+            # parse the folder
+            for file_name in filenames_in_folder:
+                lines_in_folder = write_text_into_file(filename=file_name, lines=lines_in_folder)
+            # if we have more lines left
+            if len(lines_in_folder) > 0:
+                # write them all into rest.txt
+                write_all_in_one_file(workpath, lines=lines_in_folder)
+            # print("blending done!")
+            print("打乱 完成!")
+        elif module_choice == __delete_bak_choice__: # delete backup files
+            for backupfile in filelist:
+                if backupfile.name.endswith(".bak"):
+                    os.remove(backupfile.path)
+            # print("deleting done!")
+            print("删除 完成!")
+        elif module_choice == __search_keyword_choice__: # search keyword
+            find_words(workpath, keyword)
+            
+        print("-" * 40)
 
 
-''' ----------------------------Main----------------------------- '''
 if __name__ == '__main__':
     # Informations
     print(__software__,  "v"+__version__)
     print("Author :", __author__)
     print('-' * 40)
 
+    # choice for quiting
+    __quit_choice__ = __params__["quit choice"]
+
     # get current working directory
-    workpath = os.getcwd() + "/"
+    workpath = workpath = os.path.abspath(os.path.join(os.getcwd(), ".."))+"/"
     print('<' * 40)
     print("Working in:", workpath)
     print('>' * 40)
 
-    text_formating_control_panel(workpath)
+    while True:
+        module_choice, keyword = askForOption()
+        if module_choice == __quit_choice__:
+            # print("quit...")
+            print("退出程序...")
+            break
+        text_formating_control_panel(workpath, module_choice, keyword)
 
     # pause
     os.system('pause')

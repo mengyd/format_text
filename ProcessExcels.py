@@ -1,4 +1,4 @@
-from FormatText import text_formating_control_panel, isIgnoredFile
+from FormatText import text_formating_control_panel, askForOption, isIgnoredFile
 from datetime import datetime
 import pandas as pd
 import os
@@ -38,13 +38,7 @@ def isExcel(filename):
         return True
     return False
 
-def controlPanel_processExcel(workpath):
-
-    # choice for formating
-    __format_choice__ = __params__["format choice"]
-    # choice for blending
-    __blend_choice__ = __params__["blend choice"]
-
+def start_processing(workpath):
     # 遍历Excel
     with os.scandir(workpath) as filelist:
         for file in filelist:
@@ -53,11 +47,27 @@ def controlPanel_processExcel(workpath):
                 source_df = readExcel(file.path)
                 # 写入TXT
                 dfExcelToText(file.path, source_df)
+
+def controlPanel_processExcel(workpath):
+    # choice for formating
+    __format_choice__ = __params__["format choice"]
+    # choice for blending
+    __blend_choice__ = __params__["blend choice"]
     
     # TXT操作
-    ops = text_formating_control_panel(workpath)
+    ops = []
+    while True:
+        module_choice, keyword = askForOption()
+        if module_choice == __quit_choice__:
+            # print("quit...")
+            print("退出程序...")
+            break
+        text_formating_control_panel(workpath, module_choice, keyword)
+        ops.append(module_choice)
     hasFileOps = (__format_choice__ in ops) or (__blend_choice__ in ops)
+    return hasFileOps
 
+def end_processing(workpath, hasFileOps):
     if hasFileOps:
         # 将原Excel文件移入备份文件夹
         # 创建备份文件夹
@@ -102,6 +112,9 @@ def controlPanel_processExcel(workpath):
 
 
 if __name__ == '__main__':
+    # choice for quiting
+    __quit_choice__ = __params__["quit choice"]
+
     # 选择工作目录
     while True:
         workpath = input("输入目标文件夹（直接点击Enter为所在父文件夹）：")
@@ -111,7 +124,9 @@ if __name__ == '__main__':
         if os.path.isdir(workpath):
             break
     
-    controlPanel_processExcel(workpath)
+    start_processing(workpath)
+    hasFileOps = controlPanel_processExcel(workpath)
+    end_processing(workpath, hasFileOps)
 
     # pause
     os.system('pause')
