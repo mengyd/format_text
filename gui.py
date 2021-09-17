@@ -13,10 +13,10 @@ def onClick_btn_chooseFile():
     entry_chooseFile.insert('end', file_path)
 
 def center_window(window, w, h):
-    # 获取屏幕 宽、高
+    # window width and height
     ws = window.winfo_screenwidth()
     hs = window.winfo_screenheight()
-    # 计算 x, y 位置
+    # x, y positions
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -86,11 +86,8 @@ def onClick_btn_selectMods():
         bottomFrame_textFormatPage = Frame(textFormatPage)
         bottomFrame_textFormatPage.pack(side='bottom', expand=True)
 
-        # btn_format = tk.Button(centerFrame_textFormatPage, text="标准化文档", font=('Arial', 12), width=10, height=1, command=onClick_btnFormat)
         btn_format = decor_button(centerFrame_textFormatPage, "标准化文档", onClick_btnFormat, "primary")
-        # btn_blend = tk.Button(centerFrame_textFormatPage, text="打乱文档内容", font=('Arial', 12), width=10, height=1, command=onClick_btnBlend)
         btn_blend = decor_button(centerFrame_textFormatPage, "打乱文档内容", onClick_btnBlend, "primary")
-        # btn_delete = tk.Button(centerFrame_textFormatPage, text="删除备份文件", font=('Arial', 12), width=10, height=1, command=onClick_btnDelete)
         btn_delete = decor_button(centerFrame_textFormatPage, "删除备份文件", onClick_btnDelete, "warning")
         btn_format.pack(side='left', expand=True)
         btn_blend.pack(side='left', expand=True)
@@ -98,11 +95,9 @@ def onClick_btn_selectMods():
 
         entry_search = tk.Entry(topFrame_textFormatPage, show=None, font=('Arial', 10), width=50)
         entry_search.pack(side='left', expand=True)
-        # btn_search = tk.Button(topFrame_textFormatPage, text="搜索", font=('Arial', 12), width=10, height=1, command=onClick_btnSearch)
         btn_search = decor_button(topFrame_textFormatPage, "搜索", onClick_btnSearch, "info")
         btn_search.pack(side='right', expand=True)
 
-        # btn_Finish = tk.Button(bottomFrame_textFormatPage, text="完成", font=('Arial', 12), width=10, height=1, command=onClick_btnFinish)
         btn_Finish = decor_button(bottomFrame_textFormatPage, "完成", onClick_btnFinish, "success")
         btn_Finish.pack()
         
