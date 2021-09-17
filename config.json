@@ -12,5 +12,13 @@
     "backup_excel folder": "backup excels ",
     "redundancy_file name": "rest.txt",
     "required lang": "zh",
-    "ignored file": ["_查询结果"]
+    "ignored file": ["_查询结果"],
+    "button_model":{
+        "default": ["#999999", "white"],
+        "primary": ["#3c91e6", "white"],
+        "success": ["#9be564", "white"],
+        "info": ["#c0e8f9", "black"],
+        "warning": ["#f95738", "white"],
+        "danger": ["#ff3c38", "white"]
+    }
 }
