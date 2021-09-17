@@ -1,3 +1,4 @@
+from tkinter.font import BOLD
 from loadconfig import loadParams
 import tkinter as tk
 from tkinter.constants import DISABLED, END, X
@@ -24,7 +25,7 @@ def center_window(window, w, h):
 def decor_button(window, text, command, model="default"):
     bg_color = __params__["button_model"][model][0]
     fg_color = __params__["button_model"][model][1]
-    btn = tk.Button(window, text=text, relief='flat', bg=bg_color, fg=fg_color, font=('Arial', 12), width=10, height=1, command=command)
+    btn = tk.Button(window, text=text, relief='flat', bg=bg_color, fg=fg_color, font=('Arial', 12, BOLD), width=10, height=1, command=command)
     return btn
 
 def onClick_btn_selectMods():
@@ -49,9 +50,12 @@ def onClick_btn_selectMods():
         ops.append(__delete_bak_choice__)
         messagebox.showinfo('提示','删除备份已完成', parent=textFormatPage)
     def onClick_btnSearch():
-        text_formating_control_panel(dir_path, __search_keyword_choice__, entry_search.get())
-        ops.append(__search_keyword_choice__)
-        messagebox.showinfo('提示','搜索结果已添加至：'+entry_search.get()+'_查询结果', parent=textFormatPage)
+        if entry_search.get():
+            text_formating_control_panel(dir_path, __search_keyword_choice__, entry_search.get())
+            ops.append(__search_keyword_choice__)
+            messagebox.showinfo('提示','搜索结果已添加至：'+entry_search.get()+'_查询结果', parent=textFormatPage)
+        else:
+            messagebox.showinfo('警告','未输入搜索词', parent=textFormatPage)
     def onClick_btnFinish():
         if choice == 'Excel处理':
             hasFileOps = (__format_choice__ in ops) or (__blend_choice__ in ops)
