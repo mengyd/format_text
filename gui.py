@@ -1,7 +1,7 @@
 from tkinter.font import BOLD
 from loadconfig import loadParams
 import tkinter as tk
-from tkinter.constants import DISABLED, END, X
+from tkinter.constants import END
 from tkinter import Frame, filedialog, messagebox
 from FormatText import text_formating_control_panel
 from ProcessExcels import start_processing, end_processing
@@ -55,7 +55,7 @@ def onClick_btn_selectMods():
             ops.append(__search_keyword_choice__)
             messagebox.showinfo('提示','搜索结果已添加至：'+entry_search.get()+'_查询结果', parent=textFormatPage)
         else:
-            messagebox.showinfo('警告','未输入搜索词', parent=textFormatPage)
+            messagebox.showinfo('警告','删除备份已完成', parent=textFormatPage)
     def onClick_btnFinish():
         if choice == 'Excel处理':
             hasFileOps = (__format_choice__ in ops) or (__blend_choice__ in ops)

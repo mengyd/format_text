@@ -35,7 +35,8 @@ def deleteEmptyExcel(textname):
 
 def isExcel(filename):
     if filename.endswith('.xlsx') or filename.endswith('.xls') or filename.endswith('xltx'):
-        return True
+        if not filename.startswith('~$'):
+            return True
     return False
 
 def start_processing(workpath):
