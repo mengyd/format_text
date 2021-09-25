@@ -14,11 +14,11 @@
     "required lang": "fr",
     "ignored file": ["_查询结果"],
     "button_model":{
-        "default": ["#999999", "white"],
-        "primary": ["#3c91e6", "white"],
-        "success": ["#9be564", "white"],
+        "default": ["#999999", "black"],
+        "primary": ["#3c91e6", "black"],
+        "success": ["#9be564", "black"],
         "info": ["#c0e8f9", "black"],
-        "warning": ["#f95738", "white"],
-        "danger": ["#ff3c38", "white"]
+        "warning": ["#f95738", "black"],
+        "danger": ["#ff3c38", "black"]
     }
 }

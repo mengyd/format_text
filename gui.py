@@ -25,7 +25,7 @@ def center_window(window, w, h):
 def decor_button(window, text, command, model="default"):
     bg_color = __params__["button_model"][model][0]
     fg_color = __params__["button_model"][model][1]
-    btn = tk.Button(window, text=text, relief='flat', bg=bg_color, fg=fg_color, font=('Arial', 12, BOLD), width=10, height=1, command=command)
+    btn = tk.Button(window, text=text, relief='flat', bg=bg_color, fg=fg_color, highlightbackground='#3E4149', font=('Arial', 12, BOLD), width=10, height=1, command=command)
     return btn
 
 def onClick_btn_selectMods():
@@ -114,6 +114,7 @@ def onClick_btn_selectMods():
 if __name__ == '__main__':
     homepage = tk.Tk()
     homepage.title("Home Page")
+    # homepage.configure(bg="black")
     center_window(homepage, 500, 300)
 
     topFrame = Frame(homepage)
