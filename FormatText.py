@@ -47,6 +47,13 @@ def has_bullshits(stringToControl):
         pass
     return False
 
+def contain_zh(phrase):
+    zh_pattern = re.compile(u'[\u4e00-\u9fa5]+')
+    phrase_bytes = bytes(phrase, 'utf-8')
+    phrase_bytes = phrase_bytes.decode()
+    match = zh_pattern.search(phrase_bytes)
+    return match
+
 def format_text_by_file(filename: str = None):
     """
     Format text in a certain way
@@ -113,6 +120,8 @@ def format_text_by_file(filename: str = None):
             elif has_bullshits(s):
                 # delete if has sensitive words
                 pass
+            elif __params__['required lang']!="zh" and contain_zh(s):
+                print("有汉字：", s)
             # elif re.search(r'\d', s) is not None:
             #     # delete if have numbers
             #     # print("删除数字句", s)
