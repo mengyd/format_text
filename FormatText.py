@@ -325,7 +325,8 @@ def text_formating_control_panel(workpath, module_choice, keyword=""):
             while len(lines_in_folder) > 1000:
                 newFileCounter+=1
                 newFileName = workpath + str(newFileCounter) + ".txt"
-                lines_in_folder = write_text_into_file(filename=newFileName, lines=lines_in_folder)
+                if not os.path.isfile(newFileName):
+                    lines_in_folder = write_text_into_file(filename=newFileName, lines=lines_in_folder)
             if len(lines_in_folder) > 0:
                 # write them all into rest.txt
                 write_all_in_one_file(workpath, lines=lines_in_folder)
