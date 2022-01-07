@@ -2,13 +2,23 @@
     "illegal characters": ":~@#$^&*()_+*/<>[]{}\/\"《》°“”",
     "minimun words": 5,
     "maximum words": 18,
-    "maximum characters": 2000,
+    "maximum characters": 20000,
     "maximum lines": 1000,
     "quit choice": "0",
     "format choice": "1",
     "blend choice": "2",
     "delete backup choice": "3",
+    "search keyword choice": "4",
     "backup_excel folder": "backup excels ",
     "redundancy_file name": "rest.txt",
-    "required lang": "fr"
+    "required lang": "fr",
+    "ignored file": ["_查询结果"],
+    "button_model":{
+        "default": ["#999999", "black"],
+        "primary": ["#3c91e6", "black"],
+        "success": ["#9be564", "black"],
+        "info": ["#c0e8f9", "black"],
+        "warning": ["#f95738", "black"],
+        "danger": ["#ff3c38", "black"]
+    }
 }
