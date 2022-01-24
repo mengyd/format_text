@@ -1,5 +1,5 @@
 {
-    "illegal characters": ":~@#$^&*()_+*/<>[]{}\/\"《》°“”",
+    "illegal characters": ":~@#$^&*()_+*/<>[]{}\/\"《》°“\t",
     "minimun words": 5,
     "maximum words": 18,
     "maximum characters": 20000,

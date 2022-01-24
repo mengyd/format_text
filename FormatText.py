@@ -68,11 +68,11 @@ def format_text_by_file(filename: str = None):
     linecounter = 0 
     appearedlines = []
     # open original file
-    f1 = open(filename, 'r', encoding='UTF-8')
+    f1 = open(filename, 'r', encoding='UTF-8', errors='ignore')
     # create and open result file
     f2 = open(filename+".bak", 'w', encoding='UTF-8')
     # format line by line
-    for s in f1.readlines():   
+    for s in f1.readlines():
         if s != "\n": # delete blank line
 
             # illegal combinations control
